@@ -1,22 +1,19 @@
+% Esta función lee los valores target t de un archivo .txt del conjunto de
+% entrenamiento que se encuentren en un formato:
+% {[p1 p2 p3 ... pn],[t1 t2 t3 ... tn]}
 function A = leerTargets(nombre,targetDim,numProt,protDim)
+archivo = fopen(nombre,'r');
+while archivo == -1
+    nombre = input('Ingrese un nombre válido:  ','s');
     archivo = fopen(nombre,'r');
-    while archivo == -1
-        nombre = input('Ingrese un nombre v�lido:  ','s');
-    archivo = fopen(nombre,'r');
-    end
-    A = zeros(numProt,targetDim);
-    for i=1:numProt
-       fscanf(archivo,'{[%d');
-        for j=1:protDim-2
-            fscanf(archivo,' %d');
-        end
-        fscanf(archivo,' %d],');
-        A(i,1) = fscanf(archivo,'[%d');
-        for j=1:targetDim-2
-            A(i,j) = fscanf(archivo,' %d');
-        end
-        A(i,targetDim) = fscanf(archivo,' %d]},');
-        fscanf(archivo,'\n');
-    end
-    fclose(archivo);
+end
+A = zeros(numProt,targetDim);
+for i=1:numProt
+    fscanf(archivo,'{[');
+    fscanf(archivo,' %d');
+    fscanf(archivo,'],[');
+    A(i,:) = fscanf(archivo,'%d');
+    fscanf(archivo,']}\n');
+end
+fclose(archivo);
 end
