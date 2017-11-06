@@ -9,7 +9,7 @@ r = input('Ingresa el tamaño (r) de los vectores prototipo:  ');
 
 % Se pide el nombre del archivo sin extensión
 nombreArchivo = input('Ingresa el nombre del archivo de los vectores prototipo (sin extension .txt):  ','s');
-nombreArchivo = sprintf('%s,.txt',nombreArchivo);
+nombreArchivo = sprintf('%s.txt',nombreArchivo);
 
 % Se abre el archivo, si no lo puede abrir, solicita otro archivo válido
 archivo = fopen(nombreArchivo,'r');
@@ -48,7 +48,8 @@ disp('W =');
 disp(W);
 
 % Se solicita el archivo que contiene los valores del vector bias.
-archivoBias = input('Ingresa el nombre del archivo que contiene el vector bias (con extension .txt):  ','s');
+archivoBias = input('Ingresa el nombre del archivo que contiene el vector bias (sin extension .txt):  ','s');
+archivoBias = sprintf('%s.txt',archivoBias);
 archivo = fopen(archivoBias,'r');
 
 % Si no existe, pide otro archivo válido.
