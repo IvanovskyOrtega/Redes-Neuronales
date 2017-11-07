@@ -121,17 +121,8 @@ while true
     
     t = t+1;
 end
-
-% Debido a que la salida puede ser un número real, se redondea el valor
-% para obtener el entero más cercano y se muestra en pantalla.
-a2_2 = round(a2_2);
 disp('a2 = ');
 disp(a2_2);
-
-% Se guarda el resultado final
-for k=1:S
-    fprintf(archivosGrafica(k),'%f\r\n',a2_2(k));
-end
 
 % Se muestra al usuario en cuantas iteraciones convergió la entrada.
 msg = sprintf('La red convergió exitosamente en %d iteraciones.',t);
@@ -151,8 +142,8 @@ for k=1:S
 end
 
 % Inicia la graficación
-rango = 0:t+1;
-valores = zeros(S,t+2);
+rango = 0:t;
+valores = zeros(S,t+1);
 for k=1:S
     nombre = sprintf('valoresDeGraficacion%d.txt',k);
     aux = dlmread(nombre);
