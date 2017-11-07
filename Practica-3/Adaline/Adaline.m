@@ -2,7 +2,7 @@ clc
 clear
 
 % Se solicita al usuario si usará una red ADALINE con bias o sin bias.
-op = input('¿La red usará bias?:  ','s');
+op = input('¿La red usará bias? (s/n):  ','s');
 switch(op)
     
     % Si es con bias
@@ -188,7 +188,7 @@ switch(op)
             plot(rango,valores(1,:));
             grid on
             text(itmax,valores(1,itmax+1),'\leftarrow W[1]');
-            title('Perceptron Simple');
+            title('ADALINE');
             hold on
             for k=2:numeroDeArchivos
                 plot(rango,valores(k,:));
@@ -209,7 +209,7 @@ switch(op)
             plot(rango,valores(1,:));
             grid on
             text(itmax,valores(1,itmax+1),'\leftarrow b[1]');
-            title('Perceptron Simple');
+            title('ADALINE');
             hold on
             for k=2:numeroDeArchivos
                 plot(rango,valores(k,:));
@@ -230,7 +230,7 @@ switch(op)
             plot(rango,valores(1,:));
             grid on
             text(itmax,valores(1,itmax+1),'\leftarrow eit[1]');
-            title('Perceptron Simple');
+            title('ADALINE');
             hold on
             for k=2:numeroDeArchivos
                 plot(rango,valores(k,:));
@@ -294,8 +294,8 @@ switch(op)
             
             % Se inicializan la matriz de pesos y el vector bias con ceros
             % en sus entradas y se muestran en pantalla.
-            W = zeros(S,R);
-            b = zeros(S,1);
+            W = randn(S,R);
+            b = randn(S,1);
             disp('Se usarán las siguientes matrices iniciales:');
             disp('W =');
             disp(W);
@@ -369,7 +369,7 @@ switch(op)
                     break;
                 end
                 % Segundo criterio de finalización
-                if eit < Ei && eit > 0
+                if eit < Eit && eit > 0
                    fprintf('Se tuvo un aprendizaje con 3/4 de probabilidad de éxito en la iteración %d.\n',i);
                     break;
                 end
@@ -413,7 +413,7 @@ switch(op)
             plot(rango,valores(1,:));
             grid on
             text(itmax,valores(1,itmax+1),'\leftarrow W[1]');
-            title('Perceptron Simple');
+            title('ADALINE');
             hold on
             for k=2:numeroDeArchivos
                 plot(rango,valores(k,:));
@@ -434,7 +434,7 @@ switch(op)
             plot(rango,valores(1,:));
             grid on
             text(itmax,valores(1,itmax+1),'\leftarrow b[1]');
-            title('Perceptron Simple');
+            title('ADALINE');
             hold on
             for k=2:numeroDeArchivos
                 plot(rango,valores(k,:));
@@ -455,7 +455,7 @@ switch(op)
             plot(rango,valores(1,:));
             grid on
             text(itmax,valores(1,itmax+1),'\leftarrow eit[1]');
-            title('Perceptron Simple');
+            title('ADALINE');
             hold on
             for k=2:numeroDeArchivos
                 plot(rango,valores(k,:));
@@ -597,7 +597,7 @@ switch(op)
         plot(rango,valores(1,:));
         grid on
         text(itmax,valores(1,itmax+1),'\leftarrow W[1]');
-        title('Perceptron Simple');
+        title('ADALINE');
         hold on
         for k=2:numeroDeArchivos
             plot(rango,valores(k,:));
@@ -618,7 +618,7 @@ switch(op)
         plot(rango,valores(1,:));
         grid on
         text(itmax,valores(1,itmax+1),'\leftarrow eit[1]');
-        title('Perceptron Simple');
+        title('ADALINE');
         hold on
         for k=2:numeroDeArchivos
             plot(rango,valores(k,:));
