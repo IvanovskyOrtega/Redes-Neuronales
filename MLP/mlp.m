@@ -4,12 +4,12 @@ clear
 % Leemos el archivo de entradas
 input1 = input('Ingresa el nombre del archivo que contiene los valores de entrada "*.txt" (sin extension): ','s');
 nombreArchivo1 = strcat(input1,'.txt');
-p = dlmread(nombreArchivo1);
+p = importdata(nombreArchivo1);
 
 % Leemos el archivo de los valores target
 input2 = input('Ingresa el nombre del archivo que contiene los valores target "*.txt" (sin extension): ','s');
 nombreArchivo2 = strcat(input2,'.txt');
-targets = dlmread(nombreArchivo2);
+targets = importdata(nombreArchivo2);
 fprintf('\n');
 
 % Se calcula el rango a trabajar
@@ -58,7 +58,7 @@ alfa = input('Ingresa el valor del factor de aprendizaje(alfa): ');
 
 % Se solicitan los valores de usuario eit,itmax, itval, numval
 itmax = input('Ingresa el numero de iteraciones maximas de la red(itmax): ');
-itval = input('¿Cada cuanto se hara una iteracion de validacion? (itval): ');
+itval = input('Â¿Cada cuanto se hara una iteracion de validacion? (itval): ');
 numval = input('Numero maximo de incrementos consecutivos del error de validacion (numval): ');
 eit = input('Ingrese l valor minimo del error en una epoca (eit): ');
 fprintf('\n');
@@ -194,7 +194,6 @@ for it=1:itmax
                 break;
             else
                 if E_val > Err_val
-                    fprintf('Count val = %d\n',count_val);
                     count_val = count_val+1;
                     fprintf('Count val = %d\n',count_val);
                 else
@@ -228,15 +227,3 @@ for i=1:num_elem_prueba
     a_temp = cell2mat(a(num_capas+1));
     fprintf('Para %f la salida es %f\n',dato_entrada,a_temp);
 end
-
-
-
-
-
-
-
-
-
-
-
-
