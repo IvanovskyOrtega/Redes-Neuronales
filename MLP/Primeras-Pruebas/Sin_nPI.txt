@@ -1,0 +1,194 @@
+Ingresa el nombre del archivo que contiene los valores de entrada "*.txt" (sin extension): input
+Ingresa el nombre del archivo que contiene los valores target "*.txt" (sin extension): targets
+
+Se trabajara el siguiente rango, de acuerdo al archivo:
+[-2.000000, 2.000000], con un incremento de 0.100000
+Se trabajara con 41 datos, de acuerdo al archivo.
+
+Ingresa el tamanio del vector de entrada: 1
+Ingresa el numero de capas del M.L.P.: 2
+
+Se solicitara la arquitectura del M.L.P.
+Para las funciones de activacion se tienen las siguientes:
+1) purelin()
+2) logsig()
+3) tansig()
+Ingresa el numero de neuronas de la capa 1: 3
+Ingresa la funcion de activacion de la capa 1: 2
+Ingresa el numero de neuronas de la capa 2: 1
+Ingresa la funcion de activacion de la capa 2: 1
+La arquitectura del M.L.P. es:
+     1     3     1
+
+     2     1
+
+Ingresa el valor del factor de aprendizaje(alfa): 0.01
+Ingresa el numero de iteraciones maximas de la red(itmax): 100000
+¿Cada cuanto se hara una iteracion de validacion? (itval): 2000
+Numero maximo de incrementos consecutivos del error de validacion (numval): 6
+Ingrese l valor minimo del error en una epoca (eit): 0.0000000000001
+
+Seleccione una de las siguientes configuraciones a trabajar:
+1) 80-10-10
+2) 70-15-15
+Ingrese su seleccion: 1
+Se usaran los siguientes tamanios en los subconjuntos:
+Conjunto de entrenamiento: 25 elementos
+Conjunto de validacion: 8 elementos
+Conjunto de prueba: 8 elementos
+Conjunto de validacion:
+   -1.6000    1.9511
+   -1.1000    1.3090
+   -0.6000    0.0489
+   -0.1000    0.6910
+    0.4000    1.9511
+    0.9000    1.3090
+    1.4000    0.0489
+    1.9000    0.6910
+
+Conjunto de prueba:
+   -1.7000    1.8090
+   -1.2000    1.5878
+   -0.7000    0.1910
+   -0.2000    0.4122
+    0.3000    1.8090
+    0.8000    1.5878
+    1.3000    0.1910
+    1.8000    0.4122
+
+Conjunto de entrenamiento:
+   -2.0000    1.0000
+   -1.9000    1.3090
+   -1.8000    1.5878
+   -1.5000    2.0000
+   -1.4000    1.9511
+   -1.3000    1.8090
+   -1.0000    1.0000
+   -0.9000    0.6910
+   -0.8000    0.4122
+   -0.5000         0
+   -0.4000    0.0489
+   -0.3000    0.1910
+         0    1.0000
+    0.1000    1.3090
+    0.2000    1.5878
+    0.5000    2.0000
+    0.6000    1.9511
+    0.7000    1.8090
+    1.0000    1.0000
+    1.1000    0.6910
+    1.2000    0.4122
+    1.5000         0
+    1.6000    0.0489
+    1.7000    0.1910
+    2.0000    1.0000
+
+Valores iniciales de las matrices:
+W_1 = 
+    0.6814
+   -0.4914
+    0.6286
+
+b_1 = 
+   -0.5130
+    0.8585
+   -0.3000
+
+W_2 = 
+   -0.6068   -0.4978    0.2321
+
+b_2 = 
+   -0.0534
+
+Presiona ENTER para comenzar el aprendizaje...
+Count val = 1
+Count val = 0
+Count val = 1
+Count val = 0
+Count val = 1
+Count val = 0
+Count val = 1
+Count val = 0
+Count val = 1
+Count val = 0
+Count val = 1
+Count val = 0
+Count val = 1
+Count val = 0
+Count val = 1
+Count val = 0
+Count val = 1
+Count val = 0
+Count val = 1
+Count val = 0
+Count val = 1
+Count val = 0
+Count val = 1
+Count val = 0
+Count val = 1
+Count val = 0
+Count val = 1
+Count val = 0
+Count val = 1
+Count val = 0
+Count val = 1
+Count val = 0
+Count val = 1
+Count val = 0
+Count val = 1
+Count val = 0
+Count val = 1
+Count val = 0
+Count val = 1
+Count val = 0
+Count val = 1
+Count val = 0
+Count val = 1
+Count val = 0
+Count val = 1
+Count val = 0
+Count val = 1
+Count val = 0
+Count val = 1
+Count val = 0
+Para -2.000000 la salida es 1.273060
+Para -1.900000 la salida es 1.408544
+Para -1.800000 la salida es 1.542331
+Para -1.700000 la salida es 1.668293
+Para -1.600000 la salida es 1.776885
+Para -1.500000 la salida es 1.853971
+Para -1.400000 la salida es 1.880111
+Para -1.300000 la salida es 1.831705
+Para -1.200000 la salida es 1.686305
+Para -1.100000 la salida es 1.433918
+Para -1.000000 la salida es 1.091459
+Para -0.900000 la salida es 0.709329
+Para -0.800000 la salida es 0.358144
+Para -0.700000 la salida es 0.100131
+Para -0.600000 la salida es -0.033058
+Para -0.500000 la salida es -0.041928
+Para -0.400000 la salida es 0.053437
+Para -0.300000 la salida es 0.226768
+Para -0.200000 la salida es 0.453340
+Para -0.100000 la salida es 0.712353
+Para 0.000000 la salida es 0.986384
+Para 0.100000 la salida es 1.259737
+Para 0.200000 la salida es 1.516620
+Para 0.300000 la salida es 1.739613
+Para 0.400000 la salida es 1.908803
+Para 0.500000 la salida es 2.002228
+Para 0.600000 la salida es 1.998545
+Para 0.700000 la salida es 1.882733
+Para 0.800000 la salida es 1.654322
+Para 0.900000 la salida es 1.334851
+Para 1.000000 la salida es 0.968732
+Para 1.100000 la salida es 0.613547
+Para 1.200000 la salida es 0.323033
+Para 1.300000 la salida es 0.132326
+Para 1.400000 la salida es 0.053028
+Para 1.500000 la salida es 0.077751
+Para 1.600000 la salida es 0.188606
+Para 1.700000 la salida es 0.364678
+Para 1.800000 la salida es 0.586559
+Para 1.900000 la salida es 0.838260
+Para 2.000000 la salida es 1.107499
