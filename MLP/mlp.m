@@ -92,7 +92,7 @@ W = cell(num_capas,1);
 b = cell(num_capas,1);
 disp('Valores iniciales de las matrices:');
 for i=1:num_capas
-    temp_W = -1 + (2)*rand(arq_mlp(i+1),arq_mlp(i));
+    temp_W = -1 + 2*rand(arq_mlp(i+1),arq_mlp(i));
     W{i} = temp_W;
     fprintf('W_%d = \n',i);
     disp(W{i});
@@ -120,6 +120,7 @@ for it=1:itmax
     % Si no es una iteracion de validacion
     if(mod(it,itval)~=0)
         for dato=1:num_elem_ent
+            
             a{1} = cto_ent(dato,1); % Condicion inicial
             
             % Se propaga hacia adelante el elemento del cto. de
@@ -154,8 +155,8 @@ for it=1:itmax
                 b_temp = cell2mat(b(k));
                 a_temp = cell2mat(a(k));
                 S_temp = cell2mat(S(k));
-                W{k} = W_temp-alfa*S_temp*(a_temp');
-                b{k} = b_temp-alfa*S_temp;
+                W{k} = W_temp-(alfa*S_temp*(a_temp'));
+                b{k} = b_temp-(alfa*S_temp);
             end
             
         end
@@ -182,11 +183,12 @@ for it=1:itmax
             count_val = count_val+1;
             fprintf('Count val = %d\n',count_val);
         else
-            if count_val == numval
+            if count_val == numval-1
                 fprintf('Early stopping en iteracion %d\n',it);
                 break;
             else
                 if E_val > Err_val
+                    Err_val = E_val;
                     count_val = count_val+1;
                     fprintf('Count val = %d\n',count_val);
                 else
@@ -211,11 +213,11 @@ for i=1:num_datos
     a{1} = p(i); % Condicion inicial
     % Se propaga hacia adelante el elemento del cto. de
     % entrenamiento
-    for k=2:num_capas+1
-        W_temp = cell2mat(W(k-1));
-        a_temp = cell2mat(a(k-1));
-        b_temp = cell2mat(b(k-1));
-        a{k} = funcionDeActivacion(W_temp*a_temp+b_temp,fun_capa(k-1));
+    for k=1:num_capas
+        W_temp = cell2mat(W(k));
+        a_temp = cell2mat(a(k));
+        b_temp = cell2mat(b(k));
+        a{k+1} = funcionDeActivacion(W_temp*a_temp+b_temp,fun_capa(k));
     end
     dato_entrada = cell2mat(a(1));
     a_temp = cell2mat(a(num_capas+1));
