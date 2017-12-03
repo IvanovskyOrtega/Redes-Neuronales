@@ -16,16 +16,8 @@ fprintf('\n');
 dim_p = size(p);
 lim_inf = p(1);
 lim_sup = p(dim_p(1));
-incremento = abs(p(1)-p(2));
-if lim_inf < 0
-    if lim_sup <0
-        rango = lim_inf:incremento:lim_sup;
-    else
-        rango = lim_inf:incremento:lim_sup;
-    end
-else
-    rango = lim_inf:incremento:lim_sup;
-end
+incremento = (lim_sup-lim_inf)/(dim_p(1)-1);
+rango = lim_inf:incremento:lim_sup;
 
 % Se muestra el rango y el numero de datos a trabajar
 fprintf('Se trabajara el siguiente rango, de acuerdo al archivo:\n');
@@ -113,10 +105,11 @@ end
 % Se utiliza una cell para guardar las salidas de cada capa
 a = cell(num_capas+1,1);
 
-% Se utiliza una cell para guardas las sensitividades de cada capa
+% Se utiliza una cell para guardas las sensitividades de cada capa y las
+% matrices de derivadas.
 S = cell(num_capas,1);
 F_m = cell(num_capas,1);
-X = input('Presiona cualquier tecla para comenzar el aprendizaje...');
+X = input('Presiona ENTER para comenzar el aprendizaje...');
 
 % Comienza el aprendizaje
 Err_val = 0;
@@ -213,8 +206,9 @@ for it=1:itmax
 end
 
 % Se propaga el conjunto de prueba
-for i=1:num_elem_prueba
-    a{1} = cto_prueba(i,1); % Condicion inicial
+salida_red = zeros(1,num_datos);
+for i=1:num_datos
+    a{1} = p(i); % Condicion inicial
     % Se propaga hacia adelante el elemento del cto. de
     % entrenamiento
     for k=2:num_capas+1
@@ -225,5 +219,12 @@ for i=1:num_elem_prueba
     end
     dato_entrada = cell2mat(a(1));
     a_temp = cell2mat(a(num_capas+1));
+    salida_red(i) = a_temp;
     fprintf('Para %f la salida es %f\n',dato_entrada,a_temp);
 end
+
+figure
+plot(rango,salida_red);
+hold on
+plot(rango,targets);
+hold off
