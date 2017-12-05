@@ -26,21 +26,15 @@ num_datos = dim_p(1);
 fprintf('Se trabajara con %d datos, de acuerdo al archivo.\n\n',num_datos);
 
 % Se solicita la arquitectura del M.L.P. 
-R = input('Ingresa el tamanio del vector de entrada: ');
-num_capas = input('Ingresa el numero de capas del M.L.P.: ');
-arq_mlp = zeros(1,num_capas+1);
-fun_capa = zeros(1,num_capas);
-arq_mlp(1) = R;
 fprintf('\n');
-fprintf('Se solicitara la arquitectura del M.L.P.\n');
+str_arq = input('Ingresa la arquitectura del M.L.P.: ','s');
+arq_mlp = str2num(str_arq);
+num_capas = length(arq_mlp)-1;
+R = arq_mlp(1);
 fprintf('Para las funciones de activacion se tienen las siguientes:\n');
-fprintf('1) purelin()\n2) logsig()\n3) tansig()\n');
-for i=2:num_capas+1
-    fprintf('Ingresa el numero de neuronas de la capa %d: ',i-1);
-    arq_mlp(i) = input('');
-    fprintf('Ingresa la funcion de activacion de la capa %d: ',i-1);
-    fun_capa(i-1) = input(''); 
-end
+fprintf('1) purelin()\n2) logsig()\n3) tansig()\n\n');
+str_fun = input('Ingresa las funciones de las capas de la red separadas por un espacio: ','s');
+fun_capa = str2num(str_fun);
 disp('La arquitectura del M.L.P. es:');
 disp(arq_mlp);
 disp(fun_capa);
