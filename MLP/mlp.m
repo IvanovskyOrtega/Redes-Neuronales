@@ -39,6 +39,50 @@ disp('La arquitectura del M.L.P. es:');
 disp(arq_mlp);
 disp(fun_capa);
 
+% Se abren archivos para graficacion (Esto es un poco largo...)
+num_archivos_pesos = 0;
+num_archivos_bias = 0;
+for i=1:num_capas
+    for j=1:arq_mlp(i+1)
+        for l=1:arq_mlp(i)
+            num_archivos_pesos = num_archivos_pesos +1;
+        end
+    end
+    num_archivos_bias = num_archivos_bias +1;
+end
+
+archivos_pesos = zeros(num_archivos_pesos,1);
+archivos_bias = zeros(num_archivos_bias,1);
+num_archivo = 1;
+for i=1:num_capas
+    path = strcat(pwd,'/Valores-de-Graficacion/Capa-',num2str(i),'/Pesos/');
+    if ~exist(path, 'dir')
+        mkdir(path);
+    end
+    for j=1:arq_mlp(i+1)
+        for k=1:arq_mlp(i)
+            archivo_pesos = strcat(path,'/pesos',num2str(j),'_',num2str(k),'.txt');
+            archivos_pesos(num_archivo) = fopen(archivo_pesos,'w');
+            num_archivo = num_archivo +1;
+        end
+    end
+end
+
+num_archivo = 1;
+for i=1:num_capas
+    path = strcat(pwd,'/Valores-de-Graficacion/Capa-',num2str(i),'/bias/');
+    if ~exist(path, 'dir')
+        mkdir(path);
+    end
+    for j=1:arq_mlp(i+1)
+        archivo_bias = strcat(path,'/bias',num2str(j),'.txt');
+        archivos_bias(num_archivo) = fopen(archivo_bias,'w');
+        num_archivo = num_archivo +1;
+    end
+end
+
+% Se terminan de abrir los archivos
+
 % Se solicita el valor del factor de aprendizaje
 alfa = input('Ingresa el valor del factor de aprendizaje(alfa): ');
 
@@ -82,6 +126,9 @@ disp(cto_ent);
 
 % Se inicializan la matriz de pesos y el vector bias con valores aleatorios
 % entre -1 y 1
+
+num_archivos_pesos = 1;
+num_archivos_bias = 1;
 W = cell(num_capas,1);
 b = cell(num_capas,1);
 disp('Valores iniciales de las matrices:');
@@ -94,6 +141,19 @@ for i=1:num_capas
     b{i} = temp_b;
     fprintf('b_%d = \n',i);
     disp(b{i});
+    
+    % Se imprimen los valores iniciales en los archivos
+    for j=1:arq_mlp(i+1)
+        for k=1:arq_mlp(i)
+            fprintf(archivos_pesos(num_archivos_pesos),'%f\r\n',temp_W(j,k));
+            num_archivos_pesos = num_archivos_pesos +1;
+        end
+    end
+    for j=1:arq_mlp(i+1)
+        fprintf(archivos_bias(num_archivos_bias),'%f\r\n',temp_b(j));
+        num_archivos_bias = num_archivos_bias + 1;
+    end
+    
 end
 
 % Se utiliza una cell para guardar las salidas de cada capa
@@ -107,10 +167,12 @@ X = input('Presiona ENTER para comenzar el aprendizaje...');
 
 % Comienza el aprendizaje
 Err_val = 0;
+Err_ap = 0;
 count_val = 0;
 for it=1:itmax
+    num_archivos_pesos = 1;
+    num_archivos_bias = 1;
     Eap = 0; % Error de aprendizaje
-    
     % Si no es una iteracion de validacion
     if(mod(it,itval)~=0)
         for dato=1:num_elem_ent
@@ -151,9 +213,12 @@ for it=1:itmax
                 S_temp = cell2mat(S(k));
                 W{k} = W_temp-(alfa*S_temp*(a_temp'));
                 b{k} = b_temp-(alfa*S_temp);
+                W_temp = cell2mat(W(k));
+                b_temp = cell2mat(b(k));
             end
             
         end
+        Err_ap = Eap;
         
     % Si es una iteracion de validacion    
     else
@@ -194,6 +259,24 @@ for it=1:itmax
         end
     end
     
+    % Se imprimen los valores de pesos y bias modificados a archivo
+    num_archivos_pesos = 1;
+    num_archivos_bias = 1;
+    for k=num_capas:-1:1
+        W_temp = cell2mat(W(k));
+        b_temp = cell2mat(b(k));
+        for j=1:arq_mlp(k+1)
+            for l=1:arq_mlp(k)
+                fprintf(archivos_pesos(num_archivos_pesos),'%f\r\n',W_temp(j,l));
+                num_archivos_pesos = num_archivos_pesos +1;
+            end
+        end
+        for j=1:arq_mlp(k+1)
+            fprintf(archivos_bias(num_archivos_bias),'%f\r\n',b_temp(j));
+            num_archivos_bias = num_archivos_bias + 1;
+        end
+        
+    end
     % Se comprueban las condiciones de finalizacion
     if Eap < eit && Eap > 0
         fprintf('Aprendizaje exitoso en la iteracion %d\n',it);
@@ -201,10 +284,19 @@ for it=1:itmax
     end
 end
 
+% Se cierran los archivos de valores de graficacion de pesos y bias
+for i=1:num_archivos_pesos-1
+    fclose(archivos_pesos(i));
+end
+for i=1:num_archivos_bias-1
+    fclose(archivos_bias(i));
+end
+
 % Se propaga el conjunto de prueba
+Ep = 0; % Error de prueba
 salida_red = zeros(1,num_datos);
-for i=1:num_datos
-    a{1} = p(i); % Condicion inicial
+for i=1:num_elem_prueba
+    a{1} = cto_prueba(i,1); % Condicion inicial
     % Se propaga hacia adelante el elemento del cto. de
     % entrenamiento
     for k=1:num_capas
@@ -215,9 +307,14 @@ for i=1:num_datos
     end
     dato_entrada = cell2mat(a(1));
     a_temp = cell2mat(a(num_capas+1));
+    Ep = Ep+(1/num_elem_prueba)*(cto_prueba(i,2)-a_temp);
     salida_red(i) = a_temp;
-    fprintf('Para %f la salida es %f\n',dato_entrada,a_temp);
 end
+
+% Se imprimen los valores finales de Eap, Ep y Eval
+fprintf('Eap = %d\n',Err_ap);
+fprintf('Eval = %d\n',Err_val);
+fprintf('Ep = %d\n',Ep);
 
 figure
 plot(rango,salida_red);
