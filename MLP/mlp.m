@@ -432,3 +432,23 @@ for i=1:num_capas
     title(lgd,'Simbología');
     hold off
 end
+
+for i=1:num_capas
+    path = strcat(pwd,'/Resultados-finales/Capa-',num2str(i),'/');
+    if ~exist(path, 'dir')
+        mkdir(path);
+    end
+    W_temp = cell2mat(W(i));
+    res_pesos = strcat(path,'/pesos.txt');
+    dlmwrite(res_pesos,W_temp,';');
+end
+
+for i=1:num_capas
+    path = strcat(pwd,'/Resultados-finales/Capa-',num2str(i),'/');
+    if ~exist(path, 'dir')
+        mkdir(path);
+    end
+    b_temp = cell2mat(b(i));
+    res_bias = strcat(path,'/bias.txt');
+    dlmwrite(res_bias,b_temp,';');
+end
