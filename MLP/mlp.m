@@ -165,6 +165,7 @@ F_m = cell(num_capas,1);
 X = input('Presiona ENTER para comenzar el aprendizaje...');
 
 % Comienza el aprendizaje
+early_stopping = 0;
 Err_val = 0;
 Err_ap = 0;
 valores_graficacion_eap = zeros(itmax,1);
@@ -257,6 +258,7 @@ for it=1:itmax
                 count_val = count_val+1;
                 fprintf('Count val = %d\n',count_val);
                 if count_val == numval
+                    early_stopping = 1;
                     fprintf('Early stopping en iteracion %d\n',it);
                     break;
                 end
@@ -284,12 +286,33 @@ for it=1:itmax
             fprintf(archivos_bias(num_archivos_bias),'%f\r\n',b_temp(j));
             num_archivos_bias = num_archivos_bias + 1;
         end
-        
     end
+    
     % Se comprueban las condiciones de finalizacion
     if Eap < eit && Eap > 0
         fprintf('Aprendizaje exitoso en la iteracion %d\n',it);
         break;
+    end
+end
+
+% Se imprimen a archivo los ultimos valores de pesos y bias de cada capa
+if early_stopping == 1
+% Se imprimen los valores de pesos y bias modificados a archivo
+    num_archivos_pesos = 1;
+    num_archivos_bias = 1;
+    for k=num_capas:-1:1
+        W_temp = cell2mat(W(k));
+        b_temp = cell2mat(b(k));
+        for j=1:arq_mlp(k+1)
+            for l=1:arq_mlp(k)
+                fprintf(archivos_pesos(num_archivos_pesos),'%f\r\n',W_temp(j,l));
+                num_archivos_pesos = num_archivos_pesos +1;
+            end
+        end
+        for j=1:arq_mlp(k+1)
+            fprintf(archivos_bias(num_archivos_bias),'%f\r\n',b_temp(j));
+            num_archivos_bias = num_archivos_bias + 1;
+        end
     end
 end
 
@@ -325,6 +348,8 @@ fprintf('Eap = %f\n',Err_ap);
 fprintf('Eval = %f\n',Err_val);
 fprintf('Ep = %f\n',Ep);
 
+% Graficacion del conjunto de prueba, se muestran los targets contra los
+% resultados de la red.
 figure
 rango = cto_prueba(:,1);
 s1 = scatter(rango,salida_red,'d');
@@ -342,6 +367,8 @@ lgd = legend('Salida de la red','Target','Location','northeastoutside');
 title(lgd,'Simbología');
 hold off
 
+% Se grafica la evolucion de los errores de aprendizaje y validacion por
+% epoca.
 figure
 rango = 1:1:it;
 rango2 = itval:itval:num_it_val*itval;
@@ -359,3 +386,49 @@ xlabel('Iteracion');
 lgd = legend('Eval','Eap','Location','northeastoutside');
 title(lgd,'Simbología');
 hold off
+
+%Se grafica la evolucion de los pesos
+rango = 0:1:it;
+for i=1:num_capas
+    figure
+    path = strcat(pwd,'/Valores-de-Graficacion/Capa-',num2str(i),'/Pesos/');
+    for j=1:arq_mlp(i+1)
+        for k=1:arq_mlp(i)
+            archivo_pesos = strcat(path,'/pesos',num2str(j),'_',num2str(k),'.txt');
+            simb = strcat('W(',num2str(j),',',num2str(k),')');
+            evolucion_pesos = importdata(archivo_pesos); % Identificador para la grafica
+            plot(rango,evolucion_pesos','DisplayName',simb);
+            hold on
+            grid on
+        end
+    end
+    titulo = strcat('Evolucion de los pesos de la capa',{' '},num2str(i));
+    title(titulo);
+    ylabel('Valor de los pesos');
+    xlabel('Iteracion');
+    lgd = legend('show','Location','northeastoutside');
+    title(lgd,'Simbología');
+    hold off
+end
+
+%Se grafica la evolucion de los bias
+rango = 0:1:it;
+for i=1:num_capas
+    figure
+    path = strcat(pwd,'/Valores-de-Graficacion/Capa-',num2str(i),'/bias/');
+    for j=1:arq_mlp(i+1)
+        archivo_bias = strcat(path,'/bias',num2str(j),'.txt');
+        simb = strcat('b(',num2str(j),')');
+        evolucion_bias = importdata(archivo_bias); % Identificador para la grafica
+        plot(rango,evolucion_bias','DisplayName',simb);
+        hold on
+        grid on
+    end
+    titulo = strcat('Evolucion de los bias de la capa',{' '},num2str(i));
+    title(titulo);
+    ylabel('Valor de los bias');
+    xlabel('Iteracion');
+    lgd = legend('show','Location','northeastoutside');
+    title(lgd,'Simbología');
+    hold off
+end
