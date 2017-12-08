@@ -17,7 +17,6 @@ dim_p = size(p);
 lim_inf = p(1);
 lim_sup = p(dim_p(1));
 incremento = (lim_sup-lim_inf)/(dim_p(1)-1);
-rango = lim_inf:incremento:lim_sup;
 
 % Se muestra el rango y el numero de datos a trabajar
 fprintf('Se trabajara el siguiente rango, de acuerdo al archivo:\n');
@@ -39,7 +38,7 @@ disp('La arquitectura del M.L.P. es:');
 disp(arq_mlp);
 disp(fun_capa);
 
-% Se abren archivos para graficacion (Esto es un poco largo...)
+% Se abren archivos para graficacion en modo escritura (Esto es un poco largo...)
 num_archivos_pesos = 0;
 num_archivos_bias = 0;
 for i=1:num_capas
@@ -168,7 +167,10 @@ X = input('Presiona ENTER para comenzar el aprendizaje...');
 % Comienza el aprendizaje
 Err_val = 0;
 Err_ap = 0;
+valores_graficacion_eap = zeros(itmax,1);
+valores_graficacion_eval = zeros(ceil(itmax/itval),1);
 count_val = 0;
+num_it_val = 0; % Numero de iteraciones de validacion realizadas
 for it=1:itmax
     num_archivos_pesos = 1;
     num_archivos_bias = 1;
@@ -220,9 +222,13 @@ for it=1:itmax
         end
         Err_ap = Eap;
         
+        % Se guarda el valor de graficación de Eap
+        valores_graficacion_eap(it) = Eap;
+        
     % Si es una iteracion de validacion    
     else
         E_val = 0;
+        num_it_val = num_it_val + 1;
         for dato=1:num_elem_val
             a{1} = cto_val(dato,1); % Condicion inicial
             % Se propaga hacia adelante el elemento del cto. de
@@ -237,24 +243,27 @@ for it=1:itmax
             e_val = cto_val(dato,2)-a_temp;
             E_val = E_val+(e_val/num_elem_val);
         end
+        
+        % Se guarda el valor para graficacion
+        valores_graficacion_eval(it) = E_val;
+        
         if count_val == 0
             Err_val = E_val;
             count_val = count_val+1;
             fprintf('Count val = %d\n',count_val);
         else
-            if count_val == numval-1
-                fprintf('Early stopping en iteracion %d\n',it);
-                break;
-            else
-                if E_val > Err_val
-                    Err_val = E_val;
-                    count_val = count_val+1;
-                    fprintf('Count val = %d\n',count_val);
-                else
-                    Err_val = 0;
-                    count_val = 0;
-                    fprintf('Count val = %d\n',count_val);
+            if E_val > Err_val
+                Err_val = E_val;
+                count_val = count_val+1;
+                fprintf('Count val = %d\n',count_val);
+                if count_val == numval
+                    fprintf('Early stopping en iteracion %d\n',it);
+                    break;
                 end
+            else
+                Err_val = 0;
+                count_val = 0;
+                fprintf('Count val = %d\n',count_val);
             end
         end
     end
@@ -294,7 +303,7 @@ end
 
 % Se propaga el conjunto de prueba
 Ep = 0; % Error de prueba
-salida_red = zeros(1,num_datos);
+salida_red = zeros(num_elem_prueba,1);
 for i=1:num_elem_prueba
     a{1} = cto_prueba(i,1); % Condicion inicial
     % Se propaga hacia adelante el elemento del cto. de
@@ -312,12 +321,41 @@ for i=1:num_elem_prueba
 end
 
 % Se imprimen los valores finales de Eap, Ep y Eval
-fprintf('Eap = %d\n',Err_ap);
-fprintf('Eval = %d\n',Err_val);
-fprintf('Ep = %d\n',Ep);
+fprintf('Eap = %f\n',Err_ap);
+fprintf('Eval = %f\n',Err_val);
+fprintf('Ep = %f\n',Ep);
 
 figure
-plot(rango,salida_red);
+rango = cto_prueba(:,1);
+s1 = scatter(rango,salida_red,'d');
+s1.MarkerFaceColor = [0 0 1];
+s1.MarkerEdgeColor = 'b';
+grid on
 hold on
-plot(rango,targets);
+s2 = scatter(rango,cto_prueba(:,2));
+s2.MarkerFaceColor = [1 0 1];
+s2.MarkerEdgeColor = 'm';
+title('Target v.s. Salida de la red');
+ylabel('f(p)');
+xlabel('p');
+lgd = legend('Salida de la red','Target','Location','northeastoutside');
+title(lgd,'Simbología');
+hold off
+
+figure
+rango = 1:1:it;
+rango2 = itval:itval:num_it_val*itval;
+s1 = scatter(rango2,valores_graficacion_eval(itval:itval:num_it_val*itval,1),'d');
+s1.MarkerFaceColor = [1 0 0];
+s1.MarkerEdgeColor = 'r';
+grid on
+hold on
+s2 = scatter(rango,valores_graficacion_eap(1:it,1));
+s2.MarkerFaceColor = [0 1 0];
+s2.MarkerEdgeColor = 'g';
+title('Error de aprendizaje y Error de validacion');
+ylabel('Valor del error');
+xlabel('Iteracion');
+lgd = legend('Eval','Eap','Location','northeastoutside');
+title(lgd,'Simbología');
 hold off
