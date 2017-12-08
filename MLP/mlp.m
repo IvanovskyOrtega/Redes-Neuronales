@@ -39,19 +39,19 @@ disp(arq_mlp);
 disp(fun_capa);
 
 % Se abren archivos para graficacion en modo escritura (Esto es un poco largo...)
-num_archivos_pesos = 0;
-num_archivos_bias = 0;
+num_archivos_pesos_total = 0;
+num_archivos_bias_total = 0;
 for i=1:num_capas
     for j=1:arq_mlp(i+1)
         for l=1:arq_mlp(i)
-            num_archivos_pesos = num_archivos_pesos +1;
+            num_archivos_pesos_total = num_archivos_pesos_total +1;
         end
     end
-    num_archivos_bias = num_archivos_bias +1;
+    num_archivos_bias_total = num_archivos_bias_total +1;
 end
 
-archivos_pesos = zeros(num_archivos_pesos,1);
-archivos_bias = zeros(num_archivos_bias,1);
+archivos_pesos = zeros(num_archivos_pesos_total,1);
+archivos_bias = zeros(num_archivos_bias_total,1);
 num_archivo = 1;
 for i=1:num_capas
     path = strcat(pwd,'/Valores-de-Graficacion/Capa-',num2str(i),'/Pesos/');
@@ -294,10 +294,10 @@ for it=1:itmax
 end
 
 % Se cierran los archivos de valores de graficacion de pesos y bias
-for i=1:num_archivos_pesos-1
+for i=1:num_archivos_pesos_total
     fclose(archivos_pesos(i));
 end
-for i=1:num_archivos_bias-1
+for i=1:num_archivos_bias_total
     fclose(archivos_bias(i));
 end
 
