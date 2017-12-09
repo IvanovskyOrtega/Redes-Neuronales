@@ -289,10 +289,15 @@ for it=1:itmax
     end
     
     % Se comprueban las condiciones de finalizacion
-    if Eap < eit && Eap > 0
+    if Eap <= eit && Eap >= 0
+        Err_ap = Eap;
         fprintf('Aprendizaje exitoso en la iteracion %d\n',it);
         break;
     end
+end
+
+if it == itmax
+    disp('Se llego a itmax.');
 end
 
 % Se imprimen a archivo los ultimos valores de pesos y bias de cada capa
@@ -329,8 +334,7 @@ Ep = 0; % Error de prueba
 salida_red = zeros(num_elem_prueba,1);
 for i=1:num_elem_prueba
     a{1} = cto_prueba(i,1); % Condicion inicial
-    % Se propaga hacia adelante el elemento del cto. de
-    % entrenamiento
+    % Se propaga hacia adelante el elemento del cto. de prueba
     for k=1:num_capas
         W_temp = cell2mat(W(k));
         a_temp = cell2mat(a(k));
@@ -360,7 +364,40 @@ hold on
 s2 = scatter(rango,cto_prueba(:,2));
 s2.MarkerFaceColor = [1 0 1];
 s2.MarkerEdgeColor = 'm';
-title('Target v.s. Salida de la red');
+title('Target v.s. Salida de la red (Cto. Prueba)');
+ylabel('f(p)');
+xlabel('p');
+lgd = legend('Salida de la red','Target','Location','northeastoutside');
+title(lgd,'Simbología');
+hold off
+
+% Se propaga el conjunto de entrenamiento
+salida_red = zeros(num_elem_ent,1);
+for i=1:num_elem_ent
+    a{1} = cto_ent(i,1); % Condicion inicial
+    % Se propaga hacia adelante el elemento del cto. de
+    % entrenamiento
+    for k=1:num_capas
+        W_temp = cell2mat(W(k));
+        a_temp = cell2mat(a(k));
+        b_temp = cell2mat(b(k));
+        a{k+1} = funcionDeActivacion(W_temp*a_temp+b_temp,fun_capa(k));
+    end
+    dato_entrada = cell2mat(a(1));
+    a_temp = cell2mat(a(num_capas+1));
+    Ep = Ep+(1/num_elem_ent)*(cto_ent(i,2)-a_temp);
+    salida_red(i) = a_temp;
+end
+
+% Graficacion del conjunto de entrenamiento, se muestran los targets contra
+% los resultados de la red.
+figure
+rango = cto_ent(:,1);
+plot(rango,salida_red);
+grid on
+hold on
+plot(rango,cto_ent(:,2));
+title('Target v.s. Salida de la red (Cto. Entrenamiento)');
 ylabel('f(p)');
 xlabel('p');
 lgd = legend('Salida de la red','Target','Location','northeastoutside');
@@ -372,18 +409,18 @@ hold off
 figure
 rango = 1:1:it;
 rango2 = itval:itval:num_it_val*itval;
-s1 = scatter(rango2,valores_graficacion_eval(itval:itval:num_it_val*itval,1),'d');
-s1.MarkerFaceColor = [1 0 0];
-s1.MarkerEdgeColor = 'r';
+s1 = scatter(rango,valores_graficacion_eap(1:it,1));
+s1.MarkerFaceColor = [0 1 0];
+s1.MarkerEdgeColor = 'g';
 grid on
 hold on
-s2 = scatter(rango,valores_graficacion_eap(1:it,1));
-s2.MarkerFaceColor = [0 1 0];
-s2.MarkerEdgeColor = 'g';
+s2 = scatter(rango2,valores_graficacion_eval(itval:itval:num_it_val*itval,1),'d');
+s2.MarkerFaceColor = [1 0 0];
+s2.MarkerEdgeColor = 'r';
 title('Error de aprendizaje y Error de validacion');
 ylabel('Valor del error');
 xlabel('Iteracion');
-lgd = legend('Eval','Eap','Location','northeastoutside');
+lgd = legend('Eap','Eval','Location','northeastoutside');
 title(lgd,'Simbología');
 hold off
 
