@@ -289,7 +289,7 @@ for it=1:itmax
     end
     
     % Se comprueban las condiciones de finalizacion
-    if Eap <= eit && Eap >= 0
+    if Eap <= eit && Eap >= 0 && mod(it,itval) ~= 0
         Err_ap = Eap;
         fprintf('Aprendizaje exitoso en la iteracion %d\n',it);
         break;
